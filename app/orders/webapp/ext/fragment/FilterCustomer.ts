@@ -1,27 +1,28 @@
-import Filter from 'sap/ui/model/Filter';
-import FilterOperator from 'sap/ui/model/FilterOperator';
+import type Event from 'sap/ui/base/Event';
+import type ComboBox from 'sap/m/ComboBox';
 
 /**
- * Custom filter
- * @param sValue selected filter item
- * @returns new Filter
+ * Handler for customer ComboBox selection change
+ * 'this' is bound to the ListReport ExtensionAPI context
+ * @param oEvent selection change event
  */
-export function filterItems(value: string) {
+export function onCustomerChanged(this: any, oEvent: Event) {
+    const oComboBox = oEvent.getSource() as ComboBox;
+    const oSelectedItem = oComboBox.getSelectedItem();
+    const sSelectedKey = oSelectedItem?.getKey();
 
+    console.log("Customer changed:", sSelectedKey);
 
-    return new Filter({ path: "customer", operator: FilterOperator.EQ, value1: value });
-    // switch (value) {
-    //     case "0":
-    //         return new Filter({ path: "customer", operator: FilterOperator.LT, value1: 2 });
-    //     case "1":
-    //         return new Filter({
-    //             filters: [
-    //                 new Filter({ path: "customer", operator: FilterOperator.GT, value1: 1 }),
-    //                 new Filter({ path: "customer", operator: FilterOperator.LT, value1: 5 })
-    //             ],
-    //             and: true
-    //         });
-    //     case "2":
-    //         return new Filter({ path: "customer", operator: FilterOperator.GT, value1: 5 });
-    // }
+    // Set value to other filter field using ExtensionAPI
+    // 'this' refers to the ExtensionAPI context
+    if (sSelectedKey) {
+        // Example: When customer 1 is selected, set orderType to 1
+        // When customer 2 is selected, set orderType to 2
+        this.setFilterValues("orderType_ID", [sSelectedKey]);
+        console.log("Set orderType_ID to:", sSelectedKey);
+    } else {
+        // Clear the orderType filter when customer is cleared
+        this.setFilterValues("orderType_ID");
+        console.log("Cleared orderType_ID filter");
+    }
 }

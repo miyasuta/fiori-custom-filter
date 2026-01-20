@@ -1,10 +1,9 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
         <ComboBox
             id="customer"
-            core:require="{handler: 'ns/orders/ext/controller/ListReportExt.controller'}"
-            selectedKey="{path: 'filterValues>', 
-            type: 'sap.fe.macros.filter.type.Value', 
-            formatOptions: { operator: 'ns.orders.ext.controller.ListReportExt.controller.filterItems' }}"
+            core:require="{handler: 'ns/orders/ext/fragment/FilterCustomer'}"
+            selectedKey="{path: 'filterValues>', type: 'sap.fe.macros.filter.type.Value'}"
+            selectionChange="handler.onCustomerChanged"
             items="{path: 'customerService>/Customers'}"
             >
         <items>
