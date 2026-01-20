@@ -4,6 +4,6 @@ service OrderService {
     entity Orders as projection on db.Orders;
 }
 
-service CustomersService {
+service CustomerService {
     entity Customers as projection on db.Customers;
 }

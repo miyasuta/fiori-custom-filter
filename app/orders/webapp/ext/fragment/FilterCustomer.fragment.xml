@@ -1,0 +1,14 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+        <ComboBox
+            id="customer"
+            core:require="{handler: 'ns/orders/ext/controller/ListReportExt.controller'}"
+            selectedKey="{path: 'filterValues>', 
+            type: 'sap.fe.macros.filter.type.Value', 
+            formatOptions: { operator: 'ns.orders.ext.controller.ListReportExt.controller.filterItems' }}"
+            items="{path: 'customerService>/Customers'}"
+            >
+        <items>
+            <core:Item key="{customerService>ID}" text="{customerService>name}"/>
+        </items>
+        </ComboBox>
+</core:FragmentDefinition>

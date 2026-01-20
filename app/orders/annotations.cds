@@ -50,7 +50,3 @@ annotate service.Orders with {
         ],
     })
 };
-
-annotate service.Orders with {
-    customer @Common.Label: 'customer'
-};
