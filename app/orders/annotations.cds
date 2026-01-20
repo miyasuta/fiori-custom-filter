@@ -1,57 +1,56 @@
 using OrderService as service from '../../srv/service';
+
 annotate service.Orders with @(
-    UI.FieldGroup #GeneratedGroup : {
-        $Type : 'UI.FieldGroupType',
+    UI.FieldGroup #GeneratedGroup: {
+        $Type: 'UI.FieldGroupType',
         Data : [
             {
-                $Type : 'UI.DataField',
-                Label : 'orderType_orderType',
-                Value : orderType_orderType,
+                $Type: 'UI.DataField',
+                Value: orderType_ID,
             },
             {
-                $Type : 'UI.DataField',
-                Label : 'customer',
-                Value : customer,
+                $Type: 'UI.DataField',
+                Value: customer,
             },
         ],
     },
-    UI.Facets : [
+    UI.Facets                    : [{
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'GeneratedFacet1',
+        Label : 'General Information',
+        Target: '@UI.FieldGroup#GeneratedGroup',
+    }, ],
+    UI.LineItem                  : [
         {
-            $Type : 'UI.ReferenceFacet',
-            ID : 'GeneratedFacet1',
-            Label : 'General Information',
-            Target : '@UI.FieldGroup#GeneratedGroup',
+            $Type: 'UI.DataField',
+            Value: orderType_ID,
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: customer,
         },
     ],
-    UI.LineItem : [
-        {
-            $Type : 'UI.DataField',
-            Label : 'orderType_orderType',
-            Value : orderType_orderType,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : 'customer',
-            Value : customer,
-        },
-    ],
+    UI.SelectionFields           : [orderType_ID, ],
 );
 
 annotate service.Orders with {
-    orderType @Common.ValueList : {
-        $Type : 'Common.ValueListType',
-        CollectionPath : 'OrderTypes',
-        Parameters : [
+    orderType @(Common.ValueList: {
+        $Type         : 'Common.ValueListType',
+        CollectionPath: 'OrderTypes',
+        Parameters    : [
             {
-                $Type : 'Common.ValueListParameterInOut',
-                LocalDataProperty : orderType_orderType,
-                ValueListProperty : 'orderType',
+                $Type            : 'Common.ValueListParameterInOut',
+                LocalDataProperty: orderType_ID,
+                ValueListProperty: 'ID',
             },
             {
-                $Type : 'Common.ValueListParameterDisplayOnly',
-                ValueListProperty : 'description',
+                $Type            : 'Common.ValueListParameterDisplayOnly',
+                ValueListProperty: 'description',
             },
         ],
-    }
+    })
 };
 
+annotate service.Orders with {
+    customer @Common.Label: 'customer'
+};

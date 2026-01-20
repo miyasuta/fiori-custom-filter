@@ -2,8 +2,8 @@ namespace my.company;
 
 entity Orders {
     key ID        : UUID;
-        orderType : Association to OrderTypes;
-        customer  : Integer;
+        orderType : Association to OrderTypes @title: 'Order Type';
+        customer  : Integer                   @title: 'Customer';
 }
 
 entity Customers {
@@ -13,6 +13,6 @@ entity Customers {
 
 @cds.autoexpose
 entity OrderTypes {
-    key orderType   : Integer;
-        description : String(100);
+    key ID          : Integer     @title: 'Order Type';
+        description : String(100) @title: 'Description';
 }
