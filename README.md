@@ -143,3 +143,10 @@ export function onCustomerChanged(this: ExtensionAPI, oEvent: Event) {
 FormatException in property 'text' of 'Element sap.m.Token#...':
 Illegal sap.ui.model.odata.type.Int32 value: 1
 ```
+
+## 関連ドキュメント
+
+- [Adding Custom Fields to the Filter Bar](https://ui5.sap.com/#/topic/5fb9f57fcf12401bbe39a635e9a32a4e) - カスタムフィルターフィールドの追加方法。`sap.fe.macros.filter.type.Value`の使用例と`formatOptions.operator`によるカスタムフィルター演算子の定義方法が記載されている
+- [Custom Filters - Flexible Programming Model Explorer](https://ui5.sap.com/test-resources/sap/fe/core/fpmExplorer/index.html#/buildingBlocks/filterBar/filterBarCustoms) - カスタムフィルターのライブサンプル
+- [ExtensionAPI.setFilterValues](https://ui5.sap.com/#/api/sap.fe.templates.ListReport.ExtensionAPI/methods/setFilterValues) - setFilterValues APIリファレンス
+- [sap.ui.model.FilterOperator](https://ui5.sap.com/#/api/sap.ui.model.FilterOperator) - フィルター演算子のAPIリファレンス
