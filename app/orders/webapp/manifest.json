@@ -140,18 +140,6 @@
                       "property": "customer",
                       "template": "ns.orders.ext.fragment.FilterCustomer",
                       "required": false
-                    },
-                    "dummy": {
-                      "label": "Dummy",
-                      "property": "customer",
-                      "template": "ns.orders.ext.fragment.FilterDummy",
-                      "required": false
-                    },
-                    "Customer2": {
-                      "label": "Customer2",
-                      "property": "customer",
-                      "template": "ns.orders.ext.fragment.FilterCustomer2",
-                      "required": false
                     }
                   }
                 }
@@ -174,11 +162,7 @@
     },
     "extends": {
       "extensions": {
-        "sap.ui.controllerExtensions": {
-          "sap.fe.templates.ListReport.ListReportController": {
-            "controllerName": "ns.orders.ext.controller.ListReportExt"
-          }
-        }
+        "sap.ui.controllerExtensions": {}
       }
     }
   },
