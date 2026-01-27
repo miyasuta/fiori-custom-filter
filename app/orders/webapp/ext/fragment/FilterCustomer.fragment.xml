@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
         <ComboBox
-            id="customer"
+            id="idCustomersComboBox"
             core:require="{handler: 'ns/orders/ext/fragment/FilterCustomer'}"
             selectedKey="{path: 'filterValues>', type: 'sap.fe.macros.filter.type.Value'}"
             selectionChange="handler.onCustomerChanged"

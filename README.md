@@ -144,6 +144,95 @@ FormatException in property 'text' of 'Element sap.m.Token#...':
 Illegal sap.ui.model.odata.type.Int32 value: 1
 ```
 
+## MultiComboBoxでの複数選択フィルター
+
+MultiComboBoxを使用して複数の値を選択し、OR条件でフィルタリングする場合は、`formatOptions.operator`方式を使用する。
+
+### 実装方法
+
+1. **フラグメントで`sap.fe.macros.filter.type.MultiValue`を使用**
+
+```xml
+<!-- SupplierMulti.fragment.xml -->
+<MultiComboBox
+    id="idCustomersMultiComboBox"
+    core:require="{handler: 'ns/orders/ext/fragment/SupplierMulti'}"
+    selectedKeys="{path: 'filterValues>',
+        type: 'sap.fe.macros.filter.type.MultiValue',
+        formatOptions: {operator: 'ns.orders.ext.fragment.SupplierMulti.filterItems'}}"
+    items="{path: 'customerService>/Customers'}"
+>
+    <items>
+        <core:Item key="{customerService>ID}" text="{customerService>name}"/>
+    </items>
+</MultiComboBox>
+```
+
+2. **カスタムオペレーター関数を実装**
+
+```typescript
+// SupplierMulti.ts
+import Filter from 'sap/ui/model/Filter';
+import FilterOperator from 'sap/ui/model/FilterOperator';
+
+export function filterItems(value: string) {
+    if (!value) {
+        return undefined;
+    }
+
+    // カンマ区切りの値を配列に分割
+    const values = value.split(",");
+
+    const filters = values.map(val =>
+        new Filter({ path: "customer", operator: FilterOperator.EQ, value1: val })
+    );
+
+    // 単一の値の場合はフィルターをそのまま返す
+    if (filters.length === 1) {
+        return filters[0];
+    }
+
+    return new Filter({
+        filters: filters,
+        and: false  // OR条件
+    });
+}
+```
+
+3. **manifest.jsonにカスタムオペレーターを登録（必須）**
+
+```json
+{
+  "sap.fe": {
+    "macros": {
+      "filter": {
+        "customFilterOperators": [
+          {
+            "name": "ns.orders.ext.fragment.SupplierMulti.filterItems"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### 注意点
+
+- **manifest.jsonへの登録は必須**: カスタムオペレーターを登録しないと、チェックはできるがフィルター条件が効かない
+- **`sap.fe.macros.filter.type.MultiValue`の使用は必須**: `Value`ではなく`MultiValue`を使用しないと、2回目以降の選択で値がクリアされる
+- **パラメータは配列ではなくstring**: 公式ドキュメントのMultiValueの例では配列を受け取るように記載されているが、実際にはカンマ区切りのstringが渡される（例: `"1,2,3"`）
+- **ExtensionAPIへのアクセス不可**: `formatOptions.operator`方式では、関数内で`this`を使ってExtensionAPIにアクセスできない
+
+### ComboBox（単一選択）との違い
+
+| 観点 | ComboBox | MultiComboBox |
+|------|----------|---------------|
+| Type | `sap.fe.macros.filter.type.Value` | `sap.fe.macros.filter.type.MultiValue` |
+| バインディングプロパティ | `selectedKey` | `selectedKeys` |
+| カスタムオペレーターへの入力 | 単一の値（string） | カンマ区切りの値（string） |
+| フィルター条件 | 単一条件 | 複数条件をORで結合 |
+
 ## 関連ドキュメント
 
 - [Adding Custom Fields to the Filter Bar](https://ui5.sap.com/#/topic/5fb9f57fcf12401bbe39a635e9a32a4e) - カスタムフィルターフィールドの追加方法。`sap.fe.macros.filter.type.Value`の使用例と`formatOptions.operator`によるカスタムフィルター演算子の定義方法が記載されている

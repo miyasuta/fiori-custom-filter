@@ -140,6 +140,12 @@
                       "property": "customer",
                       "template": "ns.orders.ext.fragment.FilterCustomer",
                       "required": false
+                    },
+                    "supplier": {
+                      "label": "Supplier Multi",
+                      "property": "supplier",
+                      "template": "ns.orders.ext.fragment.SupplierMulti",
+                      "required": false
                     }
                   }
                 }
@@ -169,5 +175,16 @@
   "sap.fiori": {
     "registrationIds": [],
     "archeType": "transactional"
+  },
+  "sap.fe": {
+    "macros": {
+      "filter": {
+        "customFilterOperators": [
+          {
+            "name": "ns.orders.ext.fragment.SupplierMulti.filterItems"
+          }
+        ]
+      }
+    }
   }
 }

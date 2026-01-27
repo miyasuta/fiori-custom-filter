@@ -4,6 +4,7 @@ entity Orders {
     key ID        : UUID;
         orderType : Association to OrderTypes @title: 'Order Type';
         customer  : Integer                   @title: 'Customer';
+        supplier  : Integer                   @title: 'Supplier';
 }
 
 entity Customers {
