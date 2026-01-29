@@ -233,6 +233,82 @@ export function filterItems(value: string) {
 | カスタムオペレーターへの入力 | 単一の値（string） | カンマ区切りの値（string） |
 | フィルター条件 | 単一条件 | 複数条件をORで結合 |
 
+## カスタムフィルタの3つのアプローチと使い分け
+
+公式ドキュメント「Adding Custom Fields to the Filter Bar」では、OData V4のカスタムフィルタに以下の3つのアプローチが示されている。これらは排他的ではないが、組み合わせには制約がある。
+
+### アプローチ一覧
+
+| # | アプローチ | フィルタ値の同期 | フィルタ条件の構築 |
+|---|-----------|----------------|------------------|
+| 1 | `filterValues>` バインディングのみ | 自動（バインディング） | フレームワーク自動（EQ） |
+| 2 | `formatOptions.operator` | 自動（バインディング） | オペレータ関数が Filter を直接返す |
+| 3 | イベントハンドラ + `setFilterValues` | 命令的（API呼び出し） | フレームワーク自動（EQ） |
+
+### 各アプローチの詳細
+
+**1. `filterValues>` バインディングのみ（最もシンプル）**
+
+```xml
+<RatingIndicator value="{path: 'filterValues>', type: 'Value'}" />
+```
+
+- コントロールの値プロパティを `filterValues>` にバインドするだけ
+- manifest.json の `property` に対してデフォルトの EQ フィルタが自動生成される
+- バリアント管理・アプリ状態の保持も自動
+
+**2. `formatOptions.operator`（カスタム条件が必要な場合）**
+
+```xml
+<ComboBox selectedKey="{path: 'filterValues>', type: 'Value',
+    formatOptions: { operator: 'App.ext.CustomFilter.myOperator' }}" />
+```
+
+- オペレータ関数が `Filter` オブジェクトを**直接返す**
+- フレームワークの型解決を**バイパス**するため、任意の `path` や `FilterOperator` を指定可能
+- manifest.json の `sap.fe.macros.filter.customFilterOperators` への登録が必須
+- 関数内で `this`（ExtensionAPI）にアクセス不可
+
+**3. イベントハンドラ + `setFilterValues`（命令的な値操作が必要な場合）**
+
+```xml
+<RatingIndicator value="..." change="handler.onValueChanged" />
+```
+```js
+onValueChanged: function(oEvent) {
+    this.setFilterValues("Rating", oEvent.getParameter("value"));
+}
+```
+
+- `filterValues>` バインディングが使えない場合の**代替手段**
+- フレームワークの**標準フィルタ処理パイプライン**を通るため、`property` の型解決が行われる
+- `this`（ExtensionAPI）にアクセス可能
+
+### 重要な制約：`formatOptions.operator` と `setFilterValues` は併用しない
+
+`formatOptions.operator` を使う場合、フィルタ値は `filterValues>` バインディングを通じて自動的にオペレータ関数に渡される。`setFilterValues` で外から値を書き換える必要はなく、そもそも両者はフィルタ値の同期方法が異なる**別々のパターン**である。
+
+### managed association の外部キーに対する制約
+
+`setFilterValues` にmanaged associationの外部キー（例: `contact2_ID`）を渡すと、フレームワークが ReferentialConstraint を辿ってナビゲーションプロパティのエンティティ型を解決しようとし、「Unsupported type: OrderService.Contacts」エラーが発生する。
+
+一方、`formatOptions.operator` では `Filter` オブジェクトを直接構築するため、この型解決の問題を完全に回避できる。
+
+### 選択指針
+
+```
+カスタムフィルタ条件が必要？
+├── YES → formatOptions.operator を使用（方法2）
+│         ※ ExtensionAPIへのアクセスは不可
+└── NO
+    ├── 他のフィルタ項目への値設定が必要？
+    │   ├── YES → selectionChange + setFilterValues を使用（方法3）
+    │   │         ※ property は直接プリミティブプロパティのみ（外部キー不可）
+    │   └── NO → filterValues> バインディングのみ（方法1、推奨）
+    └── filterValues> バインディングが使えない？
+        └── YES → setFilterValues を使用（方法3）
+```
+
 ## 関連ドキュメント
 
 - [Adding Custom Fields to the Filter Bar](https://ui5.sap.com/#/topic/5fb9f57fcf12401bbe39a635e9a32a4e) - カスタムフィルターフィールドの追加方法。`sap.fe.macros.filter.type.Value`の使用例と`formatOptions.operator`によるカスタムフィルター演算子の定義方法が記載されている

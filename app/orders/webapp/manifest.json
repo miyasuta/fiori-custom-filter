@@ -146,6 +146,18 @@
                       "property": "supplier",
                       "template": "ns.orders.ext.fragment.SupplierMulti",
                       "required": false
+                    },
+                    "contact": {
+                      "label": "Contact",
+                      "property": "contact1",
+                      "template": "ns.orders.ext.fragment.FilterContact",
+                      "required": false
+                    },
+                    "contact2": {
+                      "label": "Contact2",
+                      "property": "contact2/firstName",
+                      "template": "ns.orders.ext.fragment.FilterContact2",
+                      "required": false
                     }
                   }
                 }
@@ -182,6 +194,9 @@
         "customFilterOperators": [
           {
             "name": "ns.orders.ext.fragment.SupplierMulti.filterItems"
+          },
+          {
+            "name": "ns.orders.ext.fragment.FilterContact2.filterItems"
           }
         ]
       }

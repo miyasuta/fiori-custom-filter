@@ -1,0 +1,24 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+        <ComboBox
+            id="Contact"
+            selectedKey="{path: 'filterValues>', type: 'sap.fe.macros.filter.type.Value'}"
+            items="{path: '/Contacts'}"
+        >
+            <items>
+                <core:Item key="{ID}" text="{firstName} {lastName}"/>
+            </items>
+        </ComboBox>
+</core:FragmentDefinition>
+<!-- <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+        <ComboBox
+            id="Contact"
+            core:require="{handler: 'ns/orders/ext/fragment/FilterContact'}"
+            selectedKey="{path: 'filterValues>', type: 'sap.fe.macros.filter.type.Value', formatOptions: { operator: 'ns.orders.ext.fragment.FilterContact.filterItems' }}"
+        >
+            <items>
+                <core:Item key="0" text="Item1"/>
+                <core:Item key="1" text="Item2"/>
+                <core:Item key="2" text="Item3"/>
+            </items>
+        </ComboBox>
+</core:FragmentDefinition> -->
